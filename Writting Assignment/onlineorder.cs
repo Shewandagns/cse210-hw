@@ -1,45 +1,84 @@
-// program.cs
 using System;
+using System.Collections.Generic;
 
-class Program
+public class Address
 {
-    static void Main(string[] args)
+    private string street;
+    private string city;
+    private string state;
+    private string country;
+
+    public Address(string street, string city, string state, string country)
     {
-        // Create addresses
-        Address address1 = new Address("123 Main St", "Los Angeles", "CA", "USA");
-        Address address2 = new Address("456 Maple Ave", "Toronto", "ON", "Canada");
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+    }
 
-        // Create customers
-        Customer customer1 = new Customer("John Doe", address1);
-        Customer customer2 = new Customer("Jane Smith", address2);
+    public bool IsInUSA()
+    {
+        return country.Equals("USA", StringComparison.OrdinalIgnoreCase);
+    }
 
-        // Create products
-        Product product1 = new Product("Widget", "W123", 10.00, 2);
-        Product product2 = new Product("Gadget", "G456", 15.00, 1);
-        Product product3 = new Product("Doodad", "D789", 5.00, 5);
-
-        // Create orders
-        Order order1 = new Order(customer1);
-        order1.AddProduct(product1);
-        order1.AddProduct(product2);
-
-        Order order2 = new Order(customer2);
-        order2.AddProduct(product3);
-
-        // Display order information
-        Console.WriteLine(order1.GetPackingLabel());
-        Console.WriteLine(order1.GetShippingLabel());
-        Console.WriteLine($"Total Price: ${order1.CalculateTotalPrice():0.00}\n");
-
-        Console.WriteLine(order2.GetPackingLabel());
-        Console.WriteLine(order2.GetShippingLabel());
-        Console.WriteLine($"Total Price: ${order2.CalculateTotalPrice():0.00}");
+    public string GetFullAddress()
+    {
+        return $"{street}\n{city}, {state}\n{country}";
     }
 }
 
+public class Customer
+{
+    private string name;
+    private Address address;
 
-// order.cs
-using System.Collections.Generic;
+    public Customer(string name, Address address)
+    {
+        this.name = name;
+        this.address = address;
+    }
+
+    public bool IsInUSA()
+    {
+        return address.IsInUSA();
+    }
+
+    public string GetName()
+    {
+        return name;
+    }
+
+    public Address GetAddress()
+    {
+        return address;
+    }
+}
+
+public class Product
+{
+    private string name;
+    private string productId;
+    private double price;
+    private int quantity;
+
+    public Product(string name, string productId, double price, int quantity)
+    {
+        this.name = name;
+        this.productId = productId;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public double TotalCost()
+    {
+        return price * quantity;
+    }
+
+    public string GetProductInfo()
+    {
+        return $"{name} (ID: {productId})";
+    }
+}
 
 public class Order
 {
@@ -89,59 +128,38 @@ public class Order
     }
 }
 
-
-// costomer.cs
-public class Customer
+class Program
 {
-    private string name;
-    private Address address;
-
-    public Customer(string name, Address address)
+    static void Main(string[] args)
     {
-        this.name = name;
-        this.address = address;
-    }
+        // Create addresses
+        Address address1 = new Address("123 Main St", "Los Angeles", "CA", "USA");
+        Address address2 = new Address("456 Maple Ave", "Toronto", "ON", "Canada");
 
-    public bool IsInUSA()
-    {
-        return address.IsInUSA();
-    }
+        // Create customers
+        Customer customer1 = new Customer("John Doe", address1);
+        Customer customer2 = new Customer("Jane Smith", address2);
 
-    public string GetName()
-    {
-        return name;
-    }
+        // Create products
+        Product product1 = new Product("Widget", "W123", 10.00, 2);
+        Product product2 = new Product("Gadget", "G456", 15.00, 1);
+        Product product3 = new Product("Doodad", "D789", 5.00, 5);
 
-    public Address GetAddress()
-    {
-        return address;
-    }
-}
+        // Create orders
+        Order order1 = new Order(customer1);
+        order1.AddProduct(product1);
+        order1.AddProduct(product2);
 
+        Order order2 = new Order(customer2);
+        order2.AddProduct(product3);
 
-//address.cs
-public class Address
-{
-    private string street;
-    private string city;
-    private string state;
-    private string country;
+        // Display order information
+        Console.WriteLine(order1.GetPackingLabel());
+        Console.WriteLine(order1.GetShippingLabel());
+        Console.WriteLine($"Total Price: ${order1.CalculateTotalPrice():0.00}\n");
 
-    public Address(string street, string city, string state, string country)
-    {
-        this.street = street;
-        this.city = city;
-        this.state = state;
-        this.country = country;
-    }
-
-    public bool IsInUSA()
-    {
-        return country.Equals("USA", StringComparison.OrdinalIgnoreCase);
-    }
-
-    public string GetFullAddress()
-    {
-        return $"{street}\n{city}, {state}\n{country}";
+        Console.WriteLine(order2.GetPackingLabel());
+        Console.WriteLine(order2.GetShippingLabel());
+        Console.WriteLine($"Total Price: ${order2.CalculateTotalPrice():0.00}");
     }
 }
